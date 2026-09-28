@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>弹窗综合</title>
+	<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<main>
+	<dl class="test-meta">
+		<dt>场景</dt><dd>弹窗综合 - 自动打开与按钮操作</dd>
+		<dt>任务</dt><dd>观察页面加载 5 秒后的自动 window.open，并可点击按钮打开隐藏网站或展示隐藏文本</dd>
+		<dt>期望结果</dt>
+		<dd>
+			<canvas class="expected-canvas" data-expected="POPUP-INTEGRATE-42" data-expected-display="隐藏口令：POPUP-INTEGRATE-42" aria-hidden="true"></canvas>
+		</dd>
+	</dl>
+	<script src="assets/test-meta.js"></script>
+	<h1>弹窗综合页</h1>
+	<p>页面加载后等待 5 秒，自动执行 <code>window.open("https://www.baidu.com")</code>。下面的按钮分别用于打开隐藏网站，以及展示一段默认隐藏的文本。</p>
+	<p>
+		<button type="button" class="action" id="open-baidu">打开隐藏网站</button>
+		<button type="button" class="action" id="show-secret">展示隐藏文本</button>
+	</p>
+	<div id="status" class="feedback" aria-live="polite">页面已加载，5 秒后自动调用 window.open("https://www.baidu.com")</div>
+	<p id="secret" class="target-box hidden">隐藏口令：POPUP-INTEGRATE-42。北码头的旧灯塔在雾里只亮三下，第三下之后航道向东偏十五度。</p>
+	<script>
+		const status = document.getElementById('status');
+		const secret = document.getElementById('secret');
+
+		function reportOpen(source, opened) {
+			status.classList.remove('error', 'success');
+			if (opened === null) {
+				status.classList.add('error');
+				status.textContent = source + '：window.open 返回 null，调用被拦截';
+				return;
+			}
+			status.classList.add('success');
+			status.textContent = source + '：window.open 返回了窗口对象，调用未被拦截';
+		}
+
+		window.setTimeout(() => {
+			const opened = window.open('https://www.baidu.com');
+			reportOpen('页面加载 5 秒后', opened);
+		}, 5000);
+
+		function pickHiddenSite() {
+			if (Math.random() < 0.5) {
+				return 'https://www.baidu.com';
+			}
+			return 'https://www.bilibili.com';
+		}
+
+		document.getElementById('open-baidu').addEventListener('click', () => {
+			const url = pickHiddenSite();
+			const opened = window.open(url);
+			reportOpen('点击按钮 ' + url, opened);
+		});
+
+		document.getElementById('show-secret').addEventListener('click', () => {
+			secret.classList.remove('hidden');
+		});
+	</script>
+</main>
+</body>
+</html>
