@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>死循环与 alert</title>
+	<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<main>
+	<dl class="test-meta">
+		<dt>场景</dt><dd>主线程死循环与 alert</dd>
+		<dt>任务</dt><dd>展开特殊隐藏文本后进入死循环；展开普通隐藏文本只显示文本；展开警告文本后立刻 alert</dd>
+		<dt>期望结果</dt>
+		<dd>
+			<canvas class="expected-canvas" data-expected="LOOP-OFF-42" data-expected-display="普通隐藏文本：LOOP-OFF-42" aria-hidden="true"></canvas>
+		</dd>
+	</dl>
+	<script src="assets/test-meta.js"></script>
+	<h1>死循环与 alert 对照</h1>
+	<p>三个按钮都会在下面真的显示对应文本。展开特殊隐藏文本会在文字画出来之后进入死循环，点过之后需要关掉这个标签页。展开普通隐藏文本只显示文本。展开警告文本会在文字画出来之后弹出 alert。</p>
+	<p>
+		<button type="button" class="action" id="show-secret-1">展开特殊隐藏文本</button>
+		<button type="button" class="action" id="show-secret-2">展开普通隐藏文本</button>
+		<button type="button" class="action" id="show-alert">展开警告文本</button>
+	</p>
+	<h2>主线程被占住后动画是否还在动</h2>
+	<p>下面两样都不依赖页面脚本。点过展开特殊隐藏文本或展开警告文本之后看：CSS 圆盘还转不转，GIF 圆点还跳不跳。</p>
+	<div class="probe-row">
+		<div class="probe-item">
+			<div class="spin-disc"></div>
+			<div>CSS 旋转</div>
+		</div>
+		<div class="probe-item">
+			<img class="probe-gif" src="assets/spin.gif" alt="GIF 动画" width="72" height="72">
+			<div>GIF</div>
+		</div>
+	</div>
+	<p id="secret-1" class="target-box hidden">特殊隐藏文本：LOOP-ON。北码头的旧灯塔在雾里只亮三下，第三下之后航道向东偏十五度。</p>
+	<p id="secret-2" class="target-box hidden">普通隐藏文本：LOOP-OFF-42。南栈桥的铜钟每到午时敲一下，敲完后潮水退到第三块石阶。</p>
+	<p id="secret-alert" class="target-box hidden">警告文本：ALERT-ON。西仓门的红灯笼在入夜后一直亮着，直到有人把它吹灭。</p>
+	<script>
+		const secret1 = document.getElementById('secret-1');
+		const secret2 = document.getElementById('secret-2');
+		const secretAlert = document.getElementById('secret-alert');
+
+		document.getElementById('show-secret-1').addEventListener('click', () => {
+			secret1.classList.remove('hidden');
+			window.requestAnimationFrame(() => {
+				window.requestAnimationFrame(() => {
+					let spin = 0;
+					while (true) {
+						spin += 1;
+					}
+				});
+			});
+		});
+
+		document.getElementById('show-secret-2').addEventListener('click', () => {
+			secret2.classList.remove('hidden');
+		});
+
+		document.getElementById('show-alert').addEventListener('click', () => {
+			secretAlert.classList.remove('hidden');
+			window.requestAnimationFrame(() => {
+				window.requestAnimationFrame(() => {
+					window.alert('警告文本已展开');
+				});
+			});
+		});
+	</script>
+</main>
+</body>
+</html>

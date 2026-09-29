@@ -9,7 +9,7 @@
 <main>
 	<dl class="test-meta">
 		<dt>场景</dt><dd>弹窗综合 - 自动打开与按钮操作</dd>
-		<dt>任务</dt><dd>观察页面加载 5 秒后的自动 window.open，并可点击按钮打开隐藏网站或展示隐藏文本</dd>
+		<dt>任务</dt><dd>观察页面加载 5 秒后的自动 window.open。弹窗出现时看 CSS 旋转和 GIF 是否还在动</dd>
 		<dt>期望结果</dt>
 		<dd>
 			<canvas class="expected-canvas" data-expected="POPUP-INTEGRATE-42" data-expected-display="隐藏口令：POPUP-INTEGRATE-42" aria-hidden="true"></canvas>
@@ -23,6 +23,18 @@
 		<button type="button" class="action" id="show-secret">展示隐藏文本</button>
 	</p>
 	<div id="status" class="feedback" aria-live="polite">页面已加载，5 秒后自动调用 window.open("https://www.baidu.com")</div>
+	<h2>弹窗出现时动画是否还在动</h2>
+	<p>下面两样都不依赖页面脚本。拦截弹窗还在时直接看：CSS 圆盘还转不转，GIF 圆点还跳不跳。</p>
+	<div class="probe-row">
+		<div class="probe-item">
+			<div class="spin-disc"></div>
+			<div>CSS 旋转</div>
+		</div>
+		<div class="probe-item">
+			<img class="probe-gif" src="assets/spin.gif" alt="GIF 动画" width="72" height="72">
+			<div>GIF</div>
+		</div>
+	</div>
 	<p id="secret" class="target-box hidden">隐藏口令：POPUP-INTEGRATE-42。北码头的旧灯塔在雾里只亮三下，第三下之后航道向东偏十五度。</p>
 	<script>
 		const status = document.getElementById('status');

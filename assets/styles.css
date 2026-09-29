@@ -243,3 +243,36 @@ fieldset label {
 	background: #e8eefc;
 	font-size: 0.8rem;
 }
+
+.probe-row {
+	display: flex;
+	gap: 1.5rem;
+	margin: 1rem 0;
+}
+
+.probe-item {
+	text-align: center;
+	font-size: 0.9rem;
+}
+
+.spin-disc {
+	width: 72px;
+	height: 72px;
+	margin: 0 auto 0.35rem;
+	border-radius: 50%;
+	background: conic-gradient(#0b5fff, #ffc107, #0b5fff);
+	animation: probe-spin 1s linear infinite;
+}
+
+.probe-gif {
+	display: block;
+	width: 72px;
+	height: 72px;
+	margin: 0 auto 0.35rem;
+}
+
+@keyframes probe-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
