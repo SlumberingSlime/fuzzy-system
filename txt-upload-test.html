@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Upload Challenge (txt test)</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3d8bfd;
+      --ok: #3dd68c;
+      --border: #2a3548;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 48px 16px;
+    }
+    main {
+      width: 100%;
+      max-width: 640px;
+    }
+    h1 {
+      font-size: 1.75rem;
+      margin: 0 0 8px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 24px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+    }
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    #file-upload-input {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    #status.ok { color: var(--ok); }
+    #status.err { color: #ff6b6b; }
+    #output {
+      margin-top: 16px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 120px;
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>File Upload Challenge</h1>
+    <span class="tag">file-upload · txt only</span>
+    <div class="panel">
+      <h2>Upload a file using this input</h2>
+      <p>Click the file input below to select and upload a <strong>.txt</strong> file. Its text content will be shown after upload.</p>
+      <input
+        type="file"
+        id="file-upload-input"
+        accept=".txt,text/plain"
+      />
+      <div id="status">No file selected</div>
+      <pre id="output"></pre>
+    </div>
+  </main>
+  <script>
+    const input = document.querySelector("input[type='file']#file-upload-input");
+    const statusEl = document.getElementById("status");
+    const outputEl = document.getElementById("output");
+
+    function isTxtFile(file) {
+      const name = file?.name?.toLowerCase() ?? "";
+      return name.endsWith(".txt") || file?.type === "text/plain";
+    }
+
+    function showError(message) {
+      statusEl.className = "err";
+      statusEl.textContent = message;
+      outputEl.textContent = "";
+    }
+
+    input.addEventListener("change", () => {
+      const file = input.files?.[0];
+      if (!file) {
+        statusEl.className = "";
+        statusEl.textContent = "No file selected";
+        outputEl.textContent = "";
+        return;
+      }
+
+      if (!isTxtFile(file)) {
+        input.value = "";
+        showError("Only .txt files are allowed during testing.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        statusEl.className = "ok";
+        statusEl.textContent = `Challenge completed successfully! You uploaded: ${file.name} (${file.size} bytes)`;
+        outputEl.textContent = e.target.result ?? "";
+      };
+      reader.onerror = () => {
+        showError("Failed to read file.");
+      };
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
